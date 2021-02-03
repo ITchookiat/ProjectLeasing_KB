@@ -341,23 +341,23 @@ class LegislationController extends Controller
         $Contract = $request->get('Contno');
 
         if ($DB_type == 1) {       //ลูกหนี้ปกติ
-          $data = DB::connection('ibmi')
-              ->table('SFHP.ARMAST')
-              ->join('SFHP.INVTRAN','SFHP.ARMAST.CONTNO','=','SFHP.INVTRAN.CONTNO')
-              ->join('SFHP.VIEW_CUSTMAIL','SFHP.ARMAST.CUSCOD','=','SFHP.VIEW_CUSTMAIL.CUSCOD')
-              ->where('SFHP.ARMAST.CONTNO','=', $Contract)
+          $data = DB::connection('ibmi2')
+              ->table('RSFHP.ARMAST')
+              ->join('RSFHP.INVTRAN','RSFHP.ARMAST.CONTNO','=','RSFHP.INVTRAN.CONTNO')
+              ->join('RSFHP.VIEW_CUSTMAIL','RSFHP.ARMAST.CUSCOD','=','RSFHP.VIEW_CUSTMAIL.CUSCOD')
+              ->where('RSFHP.ARMAST.CONTNO','=', $Contract)
               ->first();
           
-          $dataGT = DB::connection('ibmi')
-              ->table('SFHP.VIEW_ARMGAR')
-              ->where('SFHP.VIEW_ARMGAR.CONTNO','=', $Contract)
+          $dataGT = DB::connection('ibmi2')
+              ->table('RSFHP.VIEW_ARMGAR')
+              ->where('RSFHP.VIEW_ARMGAR.CONTNO','=', $Contract)
               ->first();
 
           // query ทรัพย์
-          $dataAro = DB::connection('ibmi')
-              ->table('SFHP.ARMAST')
-              ->join('SFHP.AROTHGAR','SFHP.ARMAST.CONTNO','=','SFHP.AROTHGAR.CONTNO')
-              ->where('SFHP.ARMAST.CONTNO','=', $Contract)
+          $dataAro = DB::connection('ibmi2')
+              ->table('RSFHP.ARMAST')
+              ->join('RSFHP.AROTHGAR','RSFHP.ARMAST.CONTNO','=','RSFHP.AROTHGAR.CONTNO')
+              ->where('RSFHP.ARMAST.CONTNO','=', $Contract)
               ->first();
           
           if ($dataAro != NULL) {
@@ -387,9 +387,36 @@ class LegislationController extends Controller
             $SetRealty = 'ไม่มีทรัพย์';
           }
         }
+        elseif ($DB_type == 4) {
+          $data = DB::connection('ibmi2')
+              ->table('PSFHP.ARMAST')
+              ->join('PSFHP.INVTRAN','PSFHP.ARMAST.CONTNO','=','PSFHP.INVTRAN.CONTNO')
+              ->join('PSFHP.VIEW_CUSTMAIL','PSFHP.ARMAST.CUSCOD','=','PSFHP.VIEW_CUSTMAIL.CUSCOD')
+              ->where('PSFHP.ARMAST.CONTNO','=', $Contract)
+              ->first();
+          
+          $dataGT = DB::connection('ibmi2')
+              ->table('PSFHP.VIEW_ARMGAR')
+              ->where('PSFHP.VIEW_ARMGAR.CONTNO','=', $Contract)
+              ->first();
+
+          // query ทรัพย์
+          $dataAro = DB::connection('ibmi2')
+              ->table('PSFHP.ARMAST')
+              ->join('PSFHP.AROTHGAR','PSFHP.ARMAST.CONTNO','=','PSFHP.AROTHGAR.CONTNO')
+              ->where('PSFHP.ARMAST.CONTNO','=', $Contract)
+              ->first();
+
+          if ($dataAro != NULL) {
+            $SetRealty = 'มีทรัพย์';
+          }else {
+            $SetRealty = 'ไม่มีทรัพย์';
+          }
+        }
 
         $datalegis = DB::table('legislations')
-                  ->where('legislations.Contract_legis',$Contract)->first();
+              ->where('legislations.Contract_legis',$Contract)
+              ->first();
 
         if ($data != NULL) {
           $output ='<div class="card">
@@ -580,19 +607,19 @@ class LegislationController extends Controller
         $SetStrConn = $request->Contno;
       }
       
-      if ($request->type == 1) {       //ลูกหนี้ปกติ
-        $data = DB::connection('ibmi')
-          ->table('SFHP.ARMAST')
-          ->join('SFHP.INVTRAN','SFHP.ARMAST.CONTNO','=','SFHP.INVTRAN.CONTNO')
-          ->join('SFHP.VIEW_CUSTMAIL','SFHP.ARMAST.CUSCOD','=','SFHP.VIEW_CUSTMAIL.CUSCOD')
-          ->where('SFHP.ARMAST.CONTNO','=', $SetStrConn)
+      if ($request->type == 1) {      //leasing
+        $data = DB::connection('ibmi2')
+          ->table('RSFHP.ARMAST')
+          ->join('RSFHP.INVTRAN','RSFHP.ARMAST.CONTNO','=','RSFHP.INVTRAN.CONTNO')
+          ->join('RSFHP.VIEW_CUSTMAIL','RSFHP.ARMAST.CUSCOD','=','RSFHP.VIEW_CUSTMAIL.CUSCOD')
+          ->where('RSFHP.ARMAST.CONTNO','=', $SetStrConn)
           ->first();
 
         // query ทรัพย์
-        $dataAro = DB::connection('ibmi')
-            ->table('SFHP.ARMAST')
-            ->join('SFHP.AROTHGAR','SFHP.ARMAST.CONTNO','=','SFHP.AROTHGAR.CONTNO')
-            ->where('SFHP.ARMAST.CONTNO','=', $SetStrConn)
+        $dataAro = DB::connection('ibmi2')
+            ->table('RSFHP.ARMAST')
+            ->join('RSFHP.AROTHGAR','RSFHP.ARMAST.CONTNO','=','RSFHP.AROTHGAR.CONTNO')
+            ->where('RSFHP.ARMAST.CONTNO','=', $SetStrConn)
             ->first();
         
         if ($dataAro != NULL) {
@@ -601,9 +628,9 @@ class LegislationController extends Controller
           $SetRealty = 'ไม่มีทรัพย์';
         }
 
-        $dataGT = DB::connection('ibmi')
-            ->table('SFHP.VIEW_ARMGAR')
-            ->where('SFHP.VIEW_ARMGAR.CONTNO','=', $SetStrConn)
+        $dataGT = DB::connection('ibmi2')
+            ->table('RSFHP.VIEW_ARMGAR')
+            ->where('RSFHP.VIEW_ARMGAR.CONTNO','=', $SetStrConn)
             ->first();
 
         if ($dataGT == Null) {
@@ -645,7 +672,7 @@ class LegislationController extends Controller
           'Staleperiod_legis' => $data->EXP_PRD, //ค้าง
           'Realperiod_legis' => $data->HLDNO, //ค้างงวดจริง
           'Sumperiod_legis' => $data->BALANC - $data->SMPAY,
-          'Flag' => 'Y',
+          'Flag' => 'DB_leasing',
           'Phone_legis' => (iconv('Tis-620','utf-8',$data->TELP)),
           'Flag_status' => '1',  //ลูกหนี้ปกติ
           'UserSend1_legis' => auth()->user()->name,
@@ -786,6 +813,80 @@ class LegislationController extends Controller
         // $type = 1;
         // return redirect()->Route('legislation', $type)->with(['tab' => $tab , 'success' => '่ส่งดำเนินเรื่องเรียบร้อย']);
       }
+      elseif ($request->type == 4) {  //property
+        $data = DB::connection('ibmi2')
+          ->table('PSFHP.ARMAST')
+          ->join('PSFHP.INVTRAN','PSFHP.ARMAST.CONTNO','=','PSFHP.INVTRAN.CONTNO')
+          ->join('PSFHP.VIEW_CUSTMAIL','PSFHP.ARMAST.CUSCOD','=','PSFHP.VIEW_CUSTMAIL.CUSCOD')
+          ->where('PSFHP.ARMAST.CONTNO','=', $SetStrConn)
+          ->first();
+
+        // query ทรัพย์
+        $dataAro = DB::connection('ibmi2')
+            ->table('PSFHP.ARMAST')
+            ->join('PSFHP.AROTHGAR','PSFHP.ARMAST.CONTNO','=','PSFHP.AROTHGAR.CONTNO')
+            ->where('PSFHP.ARMAST.CONTNO','=', $SetStrConn)
+            ->first();
+        
+        if ($dataAro != NULL) {
+          $SetRealty = 'มีทรัพย์';
+        }else {
+          $SetRealty = 'ไม่มีทรัพย์';
+        }
+
+        $dataGT = DB::connection('ibmi')
+            ->table('PSFHP.VIEW_ARMGAR')
+            ->where('PSFHP.VIEW_ARMGAR.CONTNO','=', $SetStrConn)
+            ->first();
+
+        if ($dataGT == Null) {
+            $SetGTName = Null;
+            $SetGTIDNO = Null;
+            $SetGTAddress = Null;
+        }else {
+            $SetGTName = (iconv('Tis-620','utf-8',$dataGT->NAME));
+            $SetGTIDNO = (str_replace(" ","",$dataGT->IDNO));
+            $SetGTAddress = (iconv('TIS-620', 'utf-8', str_replace(" ","",$dataGT->ADDRES))." ต.".iconv('TIS-620', 'utf-8', str_replace(" ","",$dataGT->TUMB))." อ.".iconv('TIS-620', 'utf-8', str_replace(" ","",$dataGT->AUMPDES))." จ.".iconv('TIS-620', 'utf-8', str_replace(" ","",$dataGT->PROVDES))."  ".iconv('TIS-620', 'utf-8', str_replace(" ","",$dataGT->ZIP)));
+        }
+
+        $LegisDB = new Legislation([
+          'Date_legis' => date('Y-m-d'),
+          'KeyCourts_id' => Null,
+          'KeyCompro_id' => Null,
+          'Contract_legis' => $data->CONTNO,
+          'Name_legis' => (iconv('TIS-620', 'utf-8', str_replace(" ","",$data->SNAM)." ".str_replace(" ","",$data->NAME1)."  ".str_replace(" ","",$data->NAME2))),
+          'Idcard_legis' => (str_replace(" ","",$data->IDNO)),
+          'Address_legis' => (iconv('TIS-620', 'utf-8', str_replace(" ","",$data->ADDRES))." ต.".iconv('TIS-620', 'utf-8', str_replace(" ","",$data->TUMB))." อ.".iconv('TIS-620', 'utf-8', str_replace(" ","",$data->AUMPDES))." จ.".iconv('TIS-620', 'utf-8', str_replace(" ","",$data->PROVDES))."  ".iconv('TIS-620', 'utf-8', str_replace(" ","",$data->ZIP))),
+          'BrandCar_legis' => (iconv('Tis-620','utf-8',str_replace(" ","",$data->TYPE))),
+          'register_legis' => (iconv('Tis-620','utf-8',str_replace(" ","",$data->REGNO))),
+          'YearCar_legis' => $data->MANUYR,
+          'Category_legis' => (iconv('Tis-620','utf-8',str_replace(" ","",$data->BAAB))),
+          'DateDue_legis' => $data->FDATE,
+          'Pay_legis' => $data->NCARCST,
+          'DateVAT_legis' => $data->DTSTOPV,
+          'NameGT_legis' => $SetGTName,
+          'IdcardGT_legis' => $SetGTIDNO,
+          'AddressGT_legis' => $SetGTAddress,
+          'Realty_legis' => $SetRealty,
+
+          'Mile_legis' => $data->MILERT,
+          'Period_legis' => $data->TOT_UPAY,
+          'Countperiod_legis' => $data->T_NOPAY,
+          'Beforeperiod_legis' => $data->EXP_FRM,
+          'Beforemoey_legis' => $data->SMPAY,
+          'Remainperiod_legis' => $data->EXP_TO,
+          'Staleperiod_legis' => $data->EXP_PRD, //ค้าง
+          'Realperiod_legis' => $data->HLDNO, //ค้างงวดจริง
+          'Sumperiod_legis' => $data->BALANC - $data->SMPAY,
+          'Flag' => 'DB_Property',
+          'Phone_legis' => (iconv('Tis-620','utf-8',$data->TELP)),
+          'Flag_status' => '1',  //ลูกหนี้ปกติ
+          'UserSend1_legis' => auth()->user()->name,
+        ]);
+        $LegisDB->save();
+
+        return redirect()->back()->with('success','บันทึกข้อมูลเรียบร้อยแล้ว');
+      }
     }
 
     /**
@@ -834,37 +935,31 @@ class LegislationController extends Controller
         $data = DB::table('legislations')
           ->where('legislations.id',$id)->first();
 
-        $StrCon = explode("/",$data->Contract_legis);
-        $SetStr1 = $StrCon[0];
-        $SetStr2 = $StrCon[1];
-        $SetStrConn = $SetStr1."/".$SetStr2;
-        $contractNo = str_replace("/","",$data->Contract_legis);
+        if ($data->Flag == "DB_leasing") {
+          $data1 = DB::connection('ibmi2')
+            ->table('RSFHP.ARMAST')
+            ->join('RSFHP.INVTRAN','RSFHP.ARMAST.CONTNO','=','RSFHP.INVTRAN.CONTNO')
+            ->join('RSFHP.VIEW_CUSTMAIL','RSFHP.ARMAST.CUSCOD','=','RSFHP.VIEW_CUSTMAIL.CUSCOD')
+            ->where('RSFHP.ARMAST.CONTNO','=', $data->Contract_legis)
+            ->first();
 
-        if ($data->Flag == "C") {
-          $data1 = DB::connection('ibmi')
-                ->table('ASFHP.ARMAST')
-                ->join('ASFHP.INVTRAN','ASFHP.ARMAST.CONTNO','=','ASFHP.INVTRAN.CONTNO')
-                ->join('ASFHP.VIEW_CUSTMAIL','ASFHP.ARMAST.CUSCOD','=','ASFHP.VIEW_CUSTMAIL.CUSCOD')
-                ->where('ASFHP.ARMAST.CONTNO','=', $SetStrConn)
-                ->first();
-
-          $dataGT = DB::connection('ibmi')
-                ->table('SFHP.VIEW_ARMGAR')
-                ->where('SFHP.VIEW_ARMGAR.CONTNO','=', $SetStrConn)
-                ->first();
+          $dataGT = DB::connection('ibmi2')
+            ->table('SFHP.VIEW_ARMGAR')
+            ->where('SFHP.VIEW_ARMGAR.CONTNO','=', $data->Contract_legis)
+            ->first();
 
         }else {
-          $data1 = DB::connection('ibmi')
-                ->table('SFHP.ARMAST')
-                ->join('SFHP.INVTRAN','SFHP.ARMAST.CONTNO','=','SFHP.INVTRAN.CONTNO')
-                ->join('SFHP.VIEW_CUSTMAIL','SFHP.ARMAST.CUSCOD','=','SFHP.VIEW_CUSTMAIL.CUSCOD')
-                ->where('SFHP.ARMAST.CONTNO','=', $SetStrConn)
-                ->first();
+          $data1 = DB::connection('ibmi2')
+            ->table('PSFHP.ARMAST')
+            ->join('PSFHP.INVTRAN','PSFHP.ARMAST.CONTNO','=','PSFHP.INVTRAN.CONTNO')
+            ->join('PSFHP.VIEW_CUSTMAIL','PSFHP.ARMAST.CUSCOD','=','PSFHP.VIEW_CUSTMAIL.CUSCOD')
+            ->where('PSFHP.ARMAST.CONTNO','=', $data->Contract_legis)
+            ->first();
 
-          $dataGT = DB::connection('ibmi')
-                ->table('SFHP.VIEW_ARMGAR')
-                ->where('SFHP.VIEW_ARMGAR.CONTNO','=', $SetStrConn)
-                ->first();
+          $dataGT = DB::connection('ibmi2')
+            ->table('PSFHP.VIEW_ARMGAR')
+            ->where('PSFHP.VIEW_ARMGAR.CONTNO','=', $data->Contract_legis)
+            ->first();
         }
 
         $dataImages = DB::table('legisimages')
@@ -881,7 +976,7 @@ class LegislationController extends Controller
             ->orderBy('legisimages.image_id', 'ASC')
             ->first();
 
-          $contractNo = str_replace("/","",$data->Contract_legis);
+          $contractNo = $data->Contract_legis;
           return view('legislation.preview',compact('dataFile','contractNo'));
         }
 
@@ -900,17 +995,21 @@ class LegislationController extends Controller
         $data = DB::table('legislations')
             ->where('legislations.id',$id)->first();
 
-        $StrCon = explode("/",$data->Contract_legis);
-        $SetStr1 = $StrCon[0];
-        $SetStr2 = $StrCon[1];
-        $SetStrConn = $SetStr1."/".$SetStr2;
-
-        $data1 = DB::connection('ibmi')
-            ->table('SFHP.ARMAST')
-            ->join('SFHP.INVTRAN','SFHP.ARMAST.CONTNO','=','SFHP.INVTRAN.CONTNO')
-            ->join('SFHP.VIEW_CUSTMAIL','SFHP.ARMAST.CUSCOD','=','SFHP.VIEW_CUSTMAIL.CUSCOD')
-            ->where('SFHP.ARMAST.CONTNO','=', $SetStrConn)
+        if ($data->Flag == 'DB_leasing') {
+          $data1 = DB::connection('ibmi2')
+            ->table('RSFHP.ARMAST')
+            ->join('RSFHP.INVTRAN','RSFHP.ARMAST.CONTNO','=','RSFHP.INVTRAN.CONTNO')
+            ->join('RSFHP.VIEW_CUSTMAIL','RSFHP.ARMAST.CUSCOD','=','RSFHP.VIEW_CUSTMAIL.CUSCOD')
+            ->where('RSFHP.ARMAST.CONTNO','=', $data->Contract_legis)
             ->first();
+        }else {
+          $data1 = DB::connection('ibmi2')
+            ->table('PSFHP.ARMAST')
+            ->join('PSFHP.INVTRAN','PSFHP.ARMAST.CONTNO','=','PSFHP.INVTRAN.CONTNO')
+            ->join('PSFHP.VIEW_CUSTMAIL','PSFHP.ARMAST.CUSCOD','=','PSFHP.VIEW_CUSTMAIL.CUSCOD')
+            ->where('PSFHP.ARMAST.CONTNO','=', $data->Contract_legis)
+            ->first();
+        }
 
         $type = $request->type;
         return view('legislation.editAnalyze',compact('data','data1','id','type'));

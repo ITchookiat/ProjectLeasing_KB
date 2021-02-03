@@ -35,7 +35,14 @@ class HomeController extends Controller
      */
     public function index($name)
     {
-        
+        // $data = DB::connection('ibmi2')
+        // ->table('SFHP.ARMAST')
+        // ->join('SFHP.INVTRAN','SFHP.ARMAST.CONTNO','=','SFHP.INVTRAN.CONTNO')
+        // ->join('SFHP.VIEW_CUSTMAIL','SFHP.ARMAST.CUSCOD','=','SFHP.VIEW_CUSTMAIL.CUSCOD')
+        // ->where('SFHP.ARMAST.CONTNO','=','101-20200443        ')
+        // ->first();
+
+        // dd($data);
         return view($name);
     }
 

@@ -270,11 +270,6 @@
                                 <td class="text-center"> {{$row->Contract_legis}}</td>
                                 <td class="text-left"> {{$row->Name_legis}}</td>
                                 <td class="text-center">
-                                  @php
-                                     $StrCon = explode("/",$row->Contract_legis);
-                                     $SetStr1 = $StrCon[0];
-                                     $SetStr2 = $StrCon[1];
-                                  @endphp
                                   {{$row->Realperiod_legis}}
                                 </td>
                                 <td class="text-center"> {{ DateThai($row->Date_legis) }}</td>
