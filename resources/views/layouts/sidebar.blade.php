@@ -20,16 +20,6 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-      <!-- Sidebar user panel (optional) -->
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="{{ asset('dist/img/avatar5.png') }}" class="img-circle elevation-2" alt="User Image">
-        </div>
-        <div class="info">
-          <a href="#" class="d-block">{{ Auth::user()->username }}</a>
-        </div>
-      </div>
-
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column text-sm" data-widget="treeview" role="menu" data-accordion="false">
@@ -212,7 +202,7 @@
                     </p>
                   </a>
                   <ul class="nav nav-treeview" style="margin-left: 15px;">
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                       <a href="{{ route('Precipitate',2) }}" class="nav-link {{ Request::is('Precipitate/Home/2') ? 'active' : '' }}">
                         <i class="far fa-dot-circle nav-icon"></i>
                         <p>รายงาน แยกตามทีม</p>
@@ -237,7 +227,7 @@
                         <i class="far fa-dot-circle nav-icon"></i>
                         <p>รายงาน หนังสือทวงถาม</p>
                       </a>
-                    </li>
+                    </li> --}}
                   </ul>
                 </li>
               </ul>
@@ -308,7 +298,6 @@
           <li class="nav-item has-treeview {{ Request::is('Treasury/*') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link active">
               <span id="ShowData"></span>
-              {{-- <span class="badge badge-danger navbar-badge">3</span> --}}
               <i class="nav-icon fas fa-hand-holding-usd"></i>
               <p>
                 แผนกการเงิน
@@ -354,51 +343,14 @@
             @endif
           </li>
 
-          <li class="nav-item has-treeview {{ Request::is('Register/*') ? 'menu-open' : '' }}">
-            <a href="#" class="nav-link active">
-              <i class="nav-icon fab fa-buffer"></i>
-              <span id="ShowData"></span>
-              <p>
-                แผนกทะเบียน
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-
-            @if(auth::user()->type == "Admin" or auth::user()->type == "แผนก ทะเบียน")
-              <ul class="nav nav-treeview" style="margin-left: 15px;">
-                <!-- <li class="nav-item">
-                  <a href="{{ route('Register', 1) }}" class="nav-link {{ Request::is('Register/Home/1') ? 'active' : '' }}">
-                    <i class="far fa-dot-circle nav-icon"></i>
-                    <p>รายการลิสซิ่ง</p>
-                  </a>
-                </li> -->
-                <li class="nav-item">
-                  <a href="{{ route('Register', 2) }}" class="nav-link {{ Request::is('Register/Home/2') ? 'active' : '' }}">
-                    <i class="far fa-dot-circle nav-icon"></i>
-                    <p>รายการทะเบียน</p>
-                  </a>
-                </li>
-              </ul>
-            @endif
-          </li>
-
           <li class="nav-header">Documents Part</li>
           <li class="nav-item has-treeview {{ Request::is('Document/*') ? 'menu-open' : '' }}">
             <a href="{{ route('document', 1) }}" class="nav-link active bg-yellow">
               <i class="nav-icon fas fa-archive"></i>
               <p>
                 Data warehouse
-                <!-- <i class="right fas fa-angle-left"></i> -->
               </p>
             </a>
-              <!-- <ul class="nav nav-treeview" style="margin-left: 15px;">
-                <li class="nav-item">
-                  <a href="{{ route('document', 1) }}" class="nav-link {{ Request::is('Document/Home/1') ? 'active' : '' }}">
-                    <i class="far fa-dot-circle nav-icon"></i>
-                    <p>รายการเอกสาร</p>
-                  </a>
-                </li>
-              </ul> -->
           </li>
         </ul>
       </nav>

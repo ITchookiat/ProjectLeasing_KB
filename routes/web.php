@@ -69,10 +69,6 @@ Route::group(['middleware' => 'auth'], function()
     //------------------งานบัญชี----------------------//
     Route::get('/Account/Home/{type}', 'AccountController@index')->name('Accounting');
 
-    //------------------งานทะเบียน--------------------//
-    route::resource('MasterRegister','RegisterController');
-    Route::get('/Register/Home/{type}', 'RegisterController@index')->name('Register');
-
     //------------------ลูกค้า walkin------------------//
     route::resource('MasterDataCustomer','DataCustomerController');
     Route::get('/DataCustomer/Home/{type}', 'DataCustomerController@index')->name('DataCustomer');

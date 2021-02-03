@@ -169,6 +169,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
                         <a href="{{ route('login') }}">
                             <div class="card-flyer">
                                 <div class="text-box">
@@ -184,22 +186,7 @@
                         </a>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
-                        <a href="http://192.168.200.9/ProjectLabPM/public/login">
-                            <div class="card-flyer">
-                                <div class="text-box">
-                                    <div class="image-box">
-                                        <img src="{{ asset('dist/img/leasing03.png') }}" alt=""/>
-                                    </div>
-                                    <div class="text-container">                                    
-                                        <h6>chookiat LabPM</h6>
-                                        <p style="font-family: 'Prompt', sans-serif;">จำนำทะเบียนแบบไม่โอนเล่ม เร็วสุด ไวสุด ในสามจังหวัดชายแดนภาคใต้ พร้อมให้บริการคุณในทุกโอกาส</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
-                        <a href="http://192.168.200.9/ProjectHomeCar/public/login">
+                        <a href="http://203.150.34.16/ProjectHomeCar_KB/public/login">
                             <div class="card-flyer">
                                 <div class="text-box">
                                     <div class="image-box">
@@ -215,19 +202,6 @@
                         </a>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
-                        <a href="#">
-                            <div class="card-flyer">
-                                <div class="text-box">
-                                    <div class="image-box">
-                                       <img src="{{ asset('dist/img/Mazda.png') }}"/>
-                                    </div>
-                                    <div class="text-container">
-                                        <h6>Mazda LabBP</h6>
-                                        <p style="font-family: 'Prompt', sans-serif;">ศูนย์ซ่อมตัวถังและสี มาตรฐานจากโรงงานมาสด้า บริการด้วยทีมช่างมืออาชีพ รับประกันคุณภาพการซ่อม</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
                     </div>
                 </div>
             </div>
