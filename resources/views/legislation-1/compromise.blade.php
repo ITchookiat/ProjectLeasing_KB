@@ -261,27 +261,9 @@
                               <div class="row">
                                 <div class="col-6">
                                   <div class="form-group row mb-3">
-                                    <label class="col-sm-4 col-form-label text-right">
-                                      @if($data->Payall_Promise == NULL)
-                                        <font color="red">ยอดเงินก้อนแรก : </font>
-                                      @else
-                                        @if($data->Payall_Promise == $data->Sum_FirstPromise)
-                                          <font color="green">ยอดเงินก้อนแรก : </font>
-                                        @else
-                                          <font color="red">ยอดเงินก้อนแรก : </font>
-                                        @endif
-                                      @endif
-                                    </label>
+                                    <label class="col-sm-4 col-form-label text-right">ยอดเงินก้อนแรก : </label>
                                     <div class="col-sm-8">
-                                      @if($data->Payall_Promise == NULL)
-                                        <input type="text" name="PayallPromise" id="PayallPromise" value="{{ number_format($data->Payall_Promise,2) }}" class="form-control form-control-sm" oninput="Comma();"/>
-                                      @else
-                                        @if($data->Payall_Promise == $data->Sum_FirstPromise)
-                                          <input type="text" name="PayallPromise" id="PayallPromise" value="{{ number_format($data->Payall_Promise,2) }}" class="form-control form-control-sm" oninput="Comma();" readonly/>
-                                        @else
-                                          <input type="text" name="PayallPromise" id="PayallPromise" value="{{ number_format($data->Payall_Promise,2) }}" class="form-control form-control-sm" oninput="Comma();"/>
-                                        @endif
-                                      @endif
+                                      <input type="text" name="PayallPromise" id="PayallPromise" value="{{ number_format($data->Payall_Promise,2) }}" class="form-control form-control-sm" oninput="Comma();"/>
                                     </div>
                                   </div>
                                 </div>
@@ -353,13 +335,7 @@
                                 </div>
                                 <div class="col-6">
                                   <div class="form-group row mb-0">
-                                    <label class="col-sm-4 col-form-label text-right">
-                                      @if($SumPay == 0)
-                                        <font color="green">ยอดคงเหลือ : </font>
-                                      @else
-                                        <font color="red">ยอดคงเหลือ : </font>
-                                      @endif
-                                    </label>
+                                    <label class="col-sm-4 col-form-label text-right"><font color="red">ยอดคงเหลือ : </font></label>
                                     <div class="col-sm-8">
                                       <input type="text" id="SumPromise" name="SumPromise" value="{{ number_format($SumPay, 0) }}" class="form-control form-control-sm" readonly/>
                                       <input type="hidden" id="Sumhide" name="Sumhide" value="{{ $SumPay }}" class="form-control form-control-sm"/>
@@ -372,7 +348,7 @@
                               <hr>
                               <div class="row">
                                 @if($data->Status_Promise == NULL)
-                                  @if($data->Date_Payment != NULL)
+                                  @if($data->Date_Payment != Null)
                                     @if($data->Type_Payment != "เงินก้อนแรก(เงินสด)" and $data->Type_Payment != "เงินก้อนแรก(เงินโอน)")
                                       <div class="col-6">
                                         <div class="form-group row mb-0">
@@ -383,9 +359,9 @@
                                         </div>
                                       </div>
                                     @endif
+                                    <input type="hidden" name="DatehidePayment" value="{{ $data->Date_Payment }}"/>
                                   @endif
                                 @endif
-                                <input type="hidden" name="DatehidePayment" value="{{ $data->Date_Payment }}"/>
                                 <div class="col-6">
                                   @php
                                     $DateDue = date_create($data->Date_Payment);
@@ -481,15 +457,13 @@
                                     <a target="_blank" href="{{ route('legislation.report' ,[$row->Payment_id, 2]) }}" class="btn btn-warning btn-sm" title="ปริ้นใบเสร็จ">
                                       <i class="fas fa-print"></i>
                                     </a>
-                                    @if(auth::user()->type == "Admin" or auth::user()->type == "แผนก วิเคราะห์")
-                                      <form method="post" class="delete_form" action="{{ route('MasterCompro.destroy',[$row->Payment_id]) }}?type={{2}}" style="display:inline;">
-                                      {{csrf_field()}}
-                                        <input type="hidden" name="_method" value="DELETE" />
-                                        <button type="submit" data-name="{{ $row->Jobnumber_Payment }}" class="delete-modal btn btn-danger btn-sm AlertForm" title="ลบรายการ">
-                                          <i class="far fa-trash-alt"></i>
-                                        </button>
-                                      </form>
-                                    @endif
+                                    <form method="post" class="delete_form" action="{{ route('MasterCompro.destroy',[$row->Payment_id]) }}?type={{2}}" style="display:inline;">
+                                    {{csrf_field()}}
+                                      <input type="hidden" name="_method" value="DELETE" />
+                                      <button type="submit" data-name="{{ $row->Jobnumber_Payment }}" class="delete-modal btn btn-danger btn-sm AlertForm" title="ลบรายการ">
+                                        <i class="far fa-trash-alt"></i>
+                                      </button>
+                                    </form>
                                   </td>
                                 </tr>
                               @endforeach

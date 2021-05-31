@@ -302,7 +302,7 @@
           </div>
         </form>
       @elseif($type == 3) {{--ตรวจสอบการรับชำระ--}}
-        <form name="form1" action="{{ route('LegisCompro.ReportCompro', 4) }}" target="_blank" method="get" id="formimage" enctype="multipart/form-data">
+        <form name="form1" action="{{ route('LegisCompro.ReportCompro',[4]) }}" target="_blank" method="get" id="formimage" enctype="multipart/form-data">
           <div class="form-row">
             <div class="form-group col-md-6">
               <label>จากวันที่</label>
@@ -314,21 +314,13 @@
             </div>
           </div>
           <div class="form-row">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-12">
               <label>ผู้รับชำระ : </label>
               <select name="CashReceiver" class="form-control form-control-sm" style="width: 100%;">
                 <option value="" selected>--- เลือกผู้รับชำระ ---</option>
                 @foreach ($dataDB as $key => $value)
                   <option value="{{$value->name}}">{{$value->name}}</option>
                 @endforeach
-              </select>
-            </div>
-            <div class="form-group col-md-6">
-              <label>รูปแบบเอกสาร : </label>
-              <select name="Flag" class="form-control form-control-sm" style="width: 100%;" required>
-                <option value="" selected>--- เลือกแบบเอกสาร ---</option>
-                <option value="1">.PDF</option>
-                <option value="2">.Excel</option>
               </select>
             </div>
           </div>
