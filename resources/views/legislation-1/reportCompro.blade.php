@@ -238,7 +238,7 @@
           <tr style="line-height:180%;">
             <th width="80px" align="right"><b>ชื่อ - นามสกุล : </b></th>
             <th width="10px"></th>
-            <th width="150px" align="left"> {{ $dataDB->Name_legis }} </th>
+            <th width="150px" align="left">{{ iconv('Tis-620','utf-8',str_replace(" ","",$data->SNAM.$data->NAME1)."   ".str_replace(" ","",$data->NAME2)) }}</th>
           </tr>
           <tr style="line-height:180%;">
             <th width="80px" align="right"><b>เลขที่สัญญา :</b></th>
@@ -248,23 +248,28 @@
           <tr style="line-height:180%;">
             <th width="80px" align="right"><b>ที่อยู่ :</b></th>
             <th width="10px"></th>
-            <th width="300px" align="left"> {{ $dataDB->Address_legis }} </th>
+            <th width="300px" align="left">
+              {{
+                iconv('Tis-620','utf-8',str_replace(" ","",$data->ADDRES))." ต.".iconv('Tis-620','utf-8',str_replace(" ","",$data->TUMB))." อ.".iconv('Tis-620','utf-8',str_replace(" ","",$data->AUMPDES))
+                ." จ.".iconv('Tis-620','utf-8',str_replace(" ","",$data->PROVDES))."  ". $data->ZIP
+              }}
+            </th>
           </tr>
           <tr style="line-height:180%;">
             <th width="80px" align="right"><b>ยี่ห้อ :</b></th>
             <th width="10px"></th>
-            <th width="150px">{{ $dataDB->BrandCar_legis }}</th>
+            <th width="150px">{{iconv('Tis-620','utf-8',str_replace(" ","",$data->TYPE))}}</th>
             <th width="80px" align="right"><b>ป้ายทะเบียน :</b></th>
             <th width="10px"></th>
-            <th width="150px">{{ $dataDB->register_legis }}</th>
+            <th width="150px">{{iconv('Tis-620','utf-8',str_replace(" ","",$data->REGNO))}}</th>
           </tr>
           <tr style="line-height:180%;">
             <th width="80px" align="right"><b>แบบ :</b></th>
             <th width="10px"></th>
-            <th width="150px">{{ $dataDB->Category_legis }}</th>
-            <th width="80px" align="right"><b>ปี :</b></th>
+            <th width="150px">{{iconv('Tis-620','utf-8',str_replace(" ","",$data->BAAB))}}</th>
+            <th width="80px" align="right"><b>สี :</b></th>
             <th width="10px"></th>
-            <th width="150px">{{ $dataDB->YearCar_legis }}</th>
+            <th width="150px">{{iconv('Tis-620','utf-8',str_replace(" ","",$data->COLOR))}}</th>
           </tr>
         </tbody>
       </table>
@@ -557,53 +562,50 @@
     </body>
   @elseif($type == 4)     <!-- รายงาน ตรวจสอบการรับชำระ -->
     <body>
+      <br>
       <table border="1">
           <tr align="center" style="background-color: yellow;line-height: 150%;font-weight:bold;">
             <th style="width: 30px">ลำดับ</th>
-            <th style="width: 70px">เลขที่สัญญา</th>
-            <th style="width: 130px">ชื่อ - สกุล</th>
+            <th style="width: 80px">เลขที่สัญญา</th>
+            <th style="width: 150px">ชื่อ - สกุล</th>
             <th style="width: 70px">วันที่รับชำระ</th>
-            <th style="width: 70px">ยอดชำระ</th>
-            <th style="width: 70px">ยอดคงเหลือ</th>
+            <th style="width: 60px">ยอดชำระ</th>
             <th style="width: 90px">ประเภทชำระ</th>
-            <th style="width: 70px">เลขที่ใบเสร็จ</th>
-            <th style="width: 100px">ผู้รับชำระ</th>
-            <th style="width: 90px">หมายเหตุ</th>
+            <th style="width: 75px">เลขที่ใบเสร็จ</th>
+            <th style="width: 130px">ผู้รับชำระ</th>
+            <th style="width: 120px">หมายเหตุ</th>
           </tr>
           @php
             $sumTotal = 0;
             $sumPayment = 0;
-            $sumAll = 0;
           @endphp
           @foreach($data as $key => $row)
             @php
               $sumTotal = $key+1;
               $sumPayment += $row->Gold_Payment;
-              $sumAll += $row->Sum_Promise;
             @endphp
             <tr style="line-height: 110%;">
               <td align="center" style="width: 30px">{{$key+1}}</td>
-              <td align="center" style="width: 70px">{{$row->Contract_legis}}</td>
-              <td align="left" style="width: 130px">&nbsp;{{$row->Name_legis}}</td>
+              <td align="center" style="width: 80px">{{$row->Contract_legis}}</td>
+              <td align="left" style="width: 150px">&nbsp;{{$row->Name_legis}}</td>
               <td align="center" style="width: 70px">{{DateThai(substr($row->created_at,0,10))}}</td>
-              <td align="right" style="width: 70px">{{number_format($row->Gold_Payment,2)}} &nbsp;</td>
-              <td align="right" style="width: 70px">{{number_format($row->Sum_Promise, 2) }} &nbsp;</td>
+              <td align="right" style="width: 60px">{{number_format($row->Gold_Payment,2)}} &nbsp;</td>
               <td align="center" style="width: 90px">{{$row->Type_Payment}}</td>
-              <td align="center" style="width: 70px">{{$row->Jobnumber_Payment}}</td>
-              <td align="left" style="width: 100px">&nbsp; {{$row->Adduser_Payment}}</td>
-              <td align="left" style="width: 90px">&nbsp; {{$row->Note_Payment}}</td>
+              <td align="center" style="width: 75px">{{$row->Jobnumber_Payment}}</td>
+              <td align="left" style="width: 130px">&nbsp; {{$row->Adduser_Payment}}</td>
+              <td align="left" style="width: 120px">&nbsp; {{$row->Note_Payment}}</td>
             </tr>
           @endforeach
       </table>
       <table border="1" style="background-color:#F6FEA1;">
         <tr>
-          <td align="center" style="width: 100px"><b>รวม {{$sumTotal}} รายการ</b></td>
-          <td align="right" style="width: 200px"><b>รวมยอดชำระ </b></td>
-          <td align="right" style="width: 70px"><b>{{number_format($sumPayment, 2)}} </b></td>
-          <td align="right" style="width: 70px"><b>{{number_format($sumAll, 2)}} </b></td>
-          <td align="left" style="width: 350px"><b>บาท</b></td>
+          <td align="center" style="width: 110px"><b>รวม {{$sumTotal}} รายการ</b></td>
+          <td align="right" style="width: 220px"><b>รวมยอดชำระ </b></td>
+          <td align="right" style="width: 60px"><b>{{number_format($sumPayment,2)}} </b></td>
+          <td align="left" style="width: 415px"><b>บาท</b></td>
         </tr>
       </table>
     </body>
   @endif
+
 </html>

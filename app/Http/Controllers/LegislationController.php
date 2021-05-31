@@ -37,6 +37,20 @@ class LegislationController extends Controller
         $type = $request->type;
         return view('legislation.PopUp',compact('type'));
       }
+      elseif ($request->type == 2) {
+        $Conn = $request->id;
+        $data = DB::table('legislations')
+          ->leftJoin('legiscourts','legislations.id','=','legiscourts.legislation_id')
+          ->leftJoin('Legiscourtcases','legislations.id','=','Legiscourtcases.legislation_id')
+          ->leftJoin('Legiscompromises','legislations.id','=','Legiscompromises.legisPromise_id')
+          ->leftJoin('legisassets','legislations.id','=','legisassets.legisAsset_id')
+          ->where('legislations.Contract_legis',$Conn)
+          ->first();
+
+          // dd($data);
+          // return response()->json($result);
+        return response()->view('legislation.search', compact('data'));
+      }
       elseif ($request->type == 6) {   //Main ลูกหนี้เตรียมฟ้อง
         $newfdate = '';
         $newtdate = '';
@@ -169,7 +183,7 @@ class LegislationController extends Controller
 
         //ลูกหนี้ชั้นศาล
         $data3 = DB::table('legislations')
-        ->leftJoin('legiscourts','legislations.id','=','legiscourts.legislation_id')
+          ->leftJoin('legiscourts','legislations.id','=','legiscourts.legislation_id')
           ->where('legislations.Status_legis','=', NULL)
           ->where('legiscourts.fillingdate_court','!=', NULL)
           ->count();
@@ -193,9 +207,12 @@ class LegislationController extends Controller
         $data7 = DB::table('legislations')
           ->where('legislations.Status_legis','!=', NULL)
           ->count();
+        //ลูกหนี้ประนอมหนี้
+        $data8 = DB::table('Legiscompromises')
+          ->count();
 
         $type = $request->type;
-        return view('legislation.view', compact('type','data1','data2','data3','data4','data5','data6','data7'));
+        return view('legislation.view', compact('type','data1','data2','data3','data4','data5','data6','data7','data8'));
       }
       elseif ($request->type == 21) {   //Main ลูกหนี้รอฟ้อง
         $newfdate = '';
@@ -331,7 +348,18 @@ class LegislationController extends Controller
      */
     public function create()
     {
-        //
+      if ($request->type == 2) {  //ค้นหา - ลูกหนี้ฟ้อง
+        $data = DB::table('legislations')
+          ->leftJoin('legiscourts','legislations.id','=','legiscourts.legislation_id')
+          ->leftJoin('Legiscourtcases','legislations.id','=','Legiscourtcases.legislation_id')
+          ->leftJoin('Legiscompromises','legislations.id','=','Legiscompromises.legisPromise_id')
+          ->leftJoin('legisassets','legislations.id','=','legisassets.legisAsset_id')
+          ->where('legislations.Contract_legis',$request->contract)
+          ->first();
+
+        $type = $request->type;
+        return view('legislation.PopUp1',compact('type','data'));
+      }
     }
 
     public function SearchData(Request $request, $type)
@@ -341,23 +369,23 @@ class LegislationController extends Controller
         $Contract = $request->get('Contno');
 
         if ($DB_type == 1) {       //ลูกหนี้ปกติ
-          $data = DB::connection('ibmi2')
-              ->table('RSFHP.ARMAST')
-              ->join('RSFHP.INVTRAN','RSFHP.ARMAST.CONTNO','=','RSFHP.INVTRAN.CONTNO')
-              ->join('RSFHP.VIEW_CUSTMAIL','RSFHP.ARMAST.CUSCOD','=','RSFHP.VIEW_CUSTMAIL.CUSCOD')
-              ->where('RSFHP.ARMAST.CONTNO','=', $Contract)
+          $data = DB::connection('ibmi')
+              ->table('SFHP.ARMAST')
+              ->join('SFHP.INVTRAN','SFHP.ARMAST.CONTNO','=','SFHP.INVTRAN.CONTNO')
+              ->join('SFHP.VIEW_CUSTMAIL','SFHP.ARMAST.CUSCOD','=','SFHP.VIEW_CUSTMAIL.CUSCOD')
+              ->where('SFHP.ARMAST.CONTNO','=', $Contract)
               ->first();
           
-          $dataGT = DB::connection('ibmi2')
-              ->table('RSFHP.VIEW_ARMGAR')
-              ->where('RSFHP.VIEW_ARMGAR.CONTNO','=', $Contract)
+          $dataGT = DB::connection('ibmi')
+              ->table('SFHP.VIEW_ARMGAR')
+              ->where('SFHP.VIEW_ARMGAR.CONTNO','=', $Contract)
               ->first();
 
           // query ทรัพย์
-          $dataAro = DB::connection('ibmi2')
-              ->table('RSFHP.ARMAST')
-              ->join('RSFHP.AROTHGAR','RSFHP.ARMAST.CONTNO','=','RSFHP.AROTHGAR.CONTNO')
-              ->where('RSFHP.ARMAST.CONTNO','=', $Contract)
+          $dataAro = DB::connection('ibmi')
+              ->table('SFHP.ARMAST')
+              ->join('SFHP.AROTHGAR','SFHP.ARMAST.CONTNO','=','SFHP.AROTHGAR.CONTNO')
+              ->where('SFHP.ARMAST.CONTNO','=', $Contract)
               ->first();
           
           if ($dataAro != NULL) {
@@ -387,36 +415,9 @@ class LegislationController extends Controller
             $SetRealty = 'ไม่มีทรัพย์';
           }
         }
-        elseif ($DB_type == 4) {
-          $data = DB::connection('ibmi2')
-              ->table('PSFHP.ARMAST')
-              ->join('PSFHP.INVTRAN','PSFHP.ARMAST.CONTNO','=','PSFHP.INVTRAN.CONTNO')
-              ->join('PSFHP.VIEW_CUSTMAIL','PSFHP.ARMAST.CUSCOD','=','PSFHP.VIEW_CUSTMAIL.CUSCOD')
-              ->where('PSFHP.ARMAST.CONTNO','=', $Contract)
-              ->first();
-          
-          $dataGT = DB::connection('ibmi2')
-              ->table('PSFHP.VIEW_ARMGAR')
-              ->where('PSFHP.VIEW_ARMGAR.CONTNO','=', $Contract)
-              ->first();
-
-          // query ทรัพย์
-          $dataAro = DB::connection('ibmi2')
-              ->table('PSFHP.ARMAST')
-              ->join('PSFHP.AROTHGAR','PSFHP.ARMAST.CONTNO','=','PSFHP.AROTHGAR.CONTNO')
-              ->where('PSFHP.ARMAST.CONTNO','=', $Contract)
-              ->first();
-
-          if ($dataAro != NULL) {
-            $SetRealty = 'มีทรัพย์';
-          }else {
-            $SetRealty = 'ไม่มีทรัพย์';
-          }
-        }
 
         $datalegis = DB::table('legislations')
-              ->where('legislations.Contract_legis',$Contract)
-              ->first();
+                  ->where('legislations.Contract_legis',$Contract)->first();
 
         if ($data != NULL) {
           $output ='<div class="card">
@@ -507,6 +508,129 @@ class LegislationController extends Controller
           echo $output;
         }
       }
+      elseif ($type == 2) {
+        $Contract = $request->get('Contno');
+
+        $dataSearch = DB::table('legislations')
+          ->leftJoin('legiscourts','legislations.id','=','legiscourts.legislation_id')
+          ->leftJoin('Legiscourtcases','legislations.id','=','Legiscourtcases.legislation_id')
+          ->leftJoin('Legiscompromises','legislations.id','=','Legiscompromises.legisPromise_id')
+          ->leftJoin('legisassets','legislations.id','=','legisassets.legisAsset_id')
+          ->where('legislations.Contract_legis',$Contract)
+          ->first();
+
+          // dd($dataSearch);
+
+          if ($dataSearch != NULL) {
+            if ($dataSearch->Flag == 'Y') {
+              $SetState = 'ลูกหนี้ใหม่';
+            }else {
+              $SetState = 'ลูกหนี้ประนอมเก่า';
+            }
+
+            if ($dataSearch->Status_legis != NULL) {
+              $SetStatus = $dataSearch->Status_legis;
+              $SetDate1 = date('d-m-Y', strtotime($dataSearch->DateUpState_legis));
+            }
+            elseif ($dataSearch->Flag_Class != NULL) {
+              $SetStatus = $dataSearch->Flag_Class;
+
+              if ($dataSearch->Flag_Class != 'ลูกหนี้รอฟ้อง' and $dataSearch->Flag_Class != NULL) {
+                $SetDate1 = date('d-m-Y', strtotime($dataSearch->fillingdate_court));
+              }else {
+                $SetDate1 = NULL;
+              }
+            }
+            else {
+              $SetStatus = NULL;
+              $SetDate1 = NULL;
+            }
+
+            if ($dataSearch->KeyCompro_id != NULL) {
+              $SetCompro = 'ลูกหนี้ประนอมหนี้';
+              $SetDate2 = date('d-m-Y', strtotime($dataSearch->Date_Promise));
+            }else {
+              $SetCompro = NULL;
+              $SetDate2 = NULL;
+            }
+
+            if ($dataSearch->propertied_asset != NULL) {
+              if ($dataSearch->propertied_asset == 'Y') {
+                $Setasset = 'ลูกหนี้มีทรัพย์';
+                $SetDate3 = date('d-m-Y', strtotime($dataSearch->Date_asset));
+              }else {
+                $Setasset = 'ลูกหนี้ไม่มีทรัพย์';
+                $SetDate3 = NULL;
+              }
+            }else {
+              $Setasset = NULL;
+              $SetDate3 = NULL;
+            }
+            
+            $output ='<div class="card card-widget widget-user-2">
+                        <div class="widget-user-header bg-warning">
+                          <div class="widget-user-image">
+                            <div class="row">
+                              <div class="col-sm-1">
+                                <span class="info-box-icon elevation-1">
+                                <i class="far fa-id-card fa-5x"></i>
+                                </span>
+                              </div>
+                              <div class="col-sm-11">
+                                <h4 class="widget-user-username">'.$dataSearch->Name_legis.'&nbsp;&nbsp;&nbsp;<small class="badge badge-danger">('.$SetState.')</small></h4>
+                                <h5 class="widget-user-desc pr-5">'.$dataSearch->Contract_legis.'</h5>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card-footer">
+                          <div class="row">
+                            <div class="col-sm-4 border-right">
+                              <div class="description-block">
+                                <h3 class="description-header p-3"><font color="red">สถานะลูกหนี้</font></h3>
+                                <span class="description-text btn btn-sm btn-info">'.$SetStatus.'</span>
+                                <br><p></p>
+                                <button class="description-text btn btn-sm btn-warning">วันที่เริ่มฟ้อง : '.$SetDate1.'</button>
+                              </div>
+                            </div>
+                            <div class="col-sm-4 border-right">
+                              <div class="description-block">
+                                <h3 class="description-header p-3"><font color="red">สถานะประนอมหนี้</font></h3>
+                                <span class="description-text btn btn-sm btn-info">'.$SetCompro.'</span>
+                                <br><p></p>
+                                <span class="description-text btn btn-sm btn-warning">วันที่เริ่มประนอม : '.$SetDate2.'</span>
+                              </div>
+                            </div>
+                            <div class="col-sm-4">
+                              <div class="description-block">
+                                <h3 class="description-header p-3"><font color="red">สถานะทรัพย์</font></h3>
+                                <span class="description-text btn btn-sm btn-info">'.$Setasset.'</span>
+                                <br><p></p>
+                                <span class="description-text btn btn-sm btn-warning">วันที่เริ่มสืบทรัพย์ : '.$SetDate3.'</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>';
+            echo $output;
+          }
+          else {
+            $output ='<div class="card card-widget widget-user-2">
+                        <div class="widget-user-header bg-warning">
+                          <div class="widget-user-image">
+                            <div class="row text-center">
+                              <div class="col-sm-12">
+                                <span class="info-box-icon elevation-1">
+                                <h1"><font color="black" style="font-size: 20px;">ไม่มีเลขที่สัญญานี้ ในระบบกฏหมาย</font></h1>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>';
+            echo $output;
+          }
+      }
     }
 
     /**
@@ -532,13 +656,6 @@ class LegislationController extends Controller
           $user->txtStatus_legis = $SetTopCloseAcc;
           $user->Discount_legis = $SetTDiscountAcc;
         $user->update();
-
-        $data = DB::connection('ibmi')
-              ->table('SFHP.ARMAST')
-              ->join('SFHP.INVTRAN','SFHP.ARMAST.CONTNO','=','SFHP.INVTRAN.CONTNO')
-              ->join('SFHP.VIEW_CUSTMAIL','SFHP.ARMAST.CUSCOD','=','SFHP.VIEW_CUSTMAIL.CUSCOD')
-              ->where('SFHP.ARMAST.CONTNO','=', $request->ContractNo)
-              ->first();
 
         $dataDB = DB::table('legislations')
               ->leftJoin('legiscourts','legislations.id','=','legiscourts.legislation_id')
@@ -760,58 +877,6 @@ class LegislationController extends Controller
         $Legislation->update();
 
         return redirect()->back()->with('success','บันทึกข้อมูลเรียบร้อยแล้ว');
-      }
-      elseif ($request->type == 3) {  //ลูกหนี้ขายฝาก
-        // $SetStrConn = $SetStr1."/".$SetStr2;
-        // $data = DB::connection('ibmi')
-        //           ->table('LSFHP.ARMAST')
-        //           ->join('LSFHP.INVTRAN','LSFHP.ARMAST.CONTNO','=','LSFHP.INVTRAN.CONTNO')
-        //           ->join('LSFHP.VIEW_CUSTMAIL','LSFHP.ARMAST.CUSCOD','=','LSFHP.VIEW_CUSTMAIL.CUSCOD')
-        //           ->where('LSFHP.ARMAST.CONTNO','=', $SetStrConn)
-        //           ->first();
-        // $dataGT = DB::connection('ibmi')
-        //           ->table('LSFHP.VIEW_ARMGAR')
-        //           ->where('LSFHP.VIEW_ARMGAR.CONTNO','=', $SetStrConn)
-        //           ->first();
-
-        // if ($dataGT == Null) {
-        //   $SetGTName = Null;
-        //   $SetGTIDNO = Null;
-        // }else {
-        //   $SetGTName = (iconv('Tis-620','utf-8',$dataGT->NAME));
-        //   $SetGTIDNO = (str_replace(" ","",$dataGT->IDNO));
-        // }
-
-        // $LegisLand = new Legisland([
-        //   'Date_legis' => $date,
-        //   'ContractNo_legis' => $data->CONTNO,
-        //   'Name_legis' => (iconv('TIS-620', 'utf-8', str_replace(" ","",$data->SNAM).str_replace(" ","",$data->NAME1)."  ".str_replace(" ","",$data->NAME2))),
-        //   'Idcard_legis' => (str_replace(" ","",$data->IDNO)),
-        //   'BrandCar_legis' => (iconv('Tis-620','utf-8',str_replace(" ","",$data->TYPE))),
-        //   'register_legis' => (iconv('Tis-620','utf-8',str_replace(" ","",$data->REGNO))),
-        //   'YearCar_legis' => $data->MANUYR,
-        //   'Category_legis' => (iconv('Tis-620','utf-8',str_replace(" ","",$data->BAAB))),
-        //   'DateDue_legis' => $data->SDATE,
-        //   'Pay_legis' => $data->NCARCST,
-        //   'DateVAT_legis' => $data->DTSTOPV,
-        //   'NameGT_legis' => $SetGTName,
-        //   'IdcardGT_legis' => $SetGTIDNO,
-        //   'Realty_legis' => $SetRealty,
-        //   'Period_legis' => $data->TOT_UPAY,
-        //   'Countperiod_legis' => $data->T_NOPAY,
-        //   'Beforeperiod_legis' => $data->EXP_FRM,
-        //   'Beforemoney_legis' => $data->SMPAY,
-        //   'Sumperiod_legis' => $data->BALANC - $data->SMPAY,
-        //   'Remainperiod_legis' => $data->EXP_TO,
-        //   'Staleperiod_legis' => $data->EXP_PRD, //ค้าง
-        //   'Realperiod_legis' => $data->HLDNO, //ค้างงวดจริง
-        //   'StatusContract_legis' => (iconv('Tis-620','utf-8',$data->CONTSTAT)),
-        //   'Flag' => 'Y',
-        // ]);
-        // $LegisLand->save();
-        // $tab = 2;
-        // $type = 1;
-        // return redirect()->Route('legislation', $type)->with(['tab' => $tab , 'success' => '่ส่งดำเนินเรื่องเรียบร้อย']);
       }
       elseif ($request->type == 4) {  //property
         $data = DB::connection('ibmi2')

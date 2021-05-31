@@ -21,8 +21,9 @@
               <div class="col-sm-9">
                 <select name="DB_type" id="DB_type" class="form-control" style="color: red" required>
                   <option value="" selected>--------- เลือกฐานข้อมูล ---------</option>
-                  <option value="1">ลูกหนี้ฟ้อง</option>
-                  <option value="2">ลูกหนี้ประนอมหนี้</option>
+                  <option value="1">ลูกหนี้ฐานระบบ Leasing</option>
+                  {{-- <option value="2">ลูกหนี้ประนอมหนี้</option> --}}
+                  <option value="4">ลูกหนี้ฐานระบบ Property</option>
                 </select>
               </div>
             </div>
@@ -31,7 +32,7 @@
             <div class="card-tools d-inline float-right">
               <div class="input-group form-inline">
                 <label>เลขที่สัญญา : &nbsp;&nbsp;</label>
-                <input type="type" name="Contno" id="Contno" maxlength="12" class="form-control" data-inputmask="&quot;mask&quot;:&quot;99-9999/9999&quot;" data-mask="" required/>
+                <input type="type" name="Contno" id="Contno" maxlength="12" class="form-control" required/>
                 <span class="input-group-append">
                   <button type="button" class="btn btn-warning button">
                     <i class="fas fa-search"></i>

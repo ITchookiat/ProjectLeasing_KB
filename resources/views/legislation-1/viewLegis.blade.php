@@ -185,7 +185,7 @@
                 <div class="row">
                   <div class="col-8">
                     <div class="form-inline">
-                      <h5 class="">
+                      <h4 class="">
                         @if($type == 2)
                           ลูกหนี้ฟ้อง (Debtor Sued)
                         @elseif($type == 6)
@@ -205,7 +205,7 @@
                         @elseif($type == 24)
                           ลูกหนี้ชั้นโกงเจ้าหนี้
                         @endif
-                      </h5>
+                      </h4>
                     </div>
                   </div>
                   <div class="col-4">
@@ -270,11 +270,6 @@
                                 <td class="text-center"> {{$row->Contract_legis}}</td>
                                 <td class="text-left"> {{$row->Name_legis}}</td>
                                 <td class="text-center">
-                                  @php
-                                     $StrCon = explode("/",$row->Contract_legis);
-                                     $SetStr1 = $StrCon[0];
-                                     $SetStr2 = $StrCon[1];
-                                  @endphp
                                   {{$row->Realperiod_legis}}
                                 </td>
                                 <td class="text-center"> {{ DateThai($row->Date_legis) }}</td>
